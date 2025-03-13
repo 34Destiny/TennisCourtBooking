@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Szczegóły Klienta</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Tenisowy Klub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/admin}">Panel</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+          <a class="nav-link" href="/reservation">Rezerwacje</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+          <a class="nav-link" th:href="@{/logout}"
+             onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Szczegóły Klienta</h1>
+
+  <form th:action="@{/admin/update}" method="post" class="border p-4 shadow-sm rounded bg-light">
+    <input type="hidden" name="idKlient" th:value="${klient.idKlient}" />
+    <input type="hidden" name="adres.idAdres" th:value="${klient.adres.idAdres}" />
+    <input type="hidden" name="kontakt.idKontakt" th:value="${klient.kontakt.idKontakt}" />
+
+    <h3 class="mb-3 text-primary">Dane Klienta</h3>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="imie">Imię</label>
+        <input type="text" id="imie" name="imie" class="form-control" th:value="${klient.imie}" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="nazwisko">Nazwisko</label>
+        <input type="text" id="nazwisko" name="nazwisko" class="form-control" th:value="${klient.nazwisko}" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="haslo">Nowe Hasło</label>
+      <input type="password" id="haslo" name="haslo" class="form-control" placeholder="Wprowadź nowe hasło" />
+    </div>
+    <div class="form-group">
+      <label for="ranga">Ranga</label>
+      <select id="ranga" name="ranga" class="form-control">
+        <option value="ROLE_USER" th:selected="${klient.ranga == 'ROLE_USER'}">user</option>
+        <option value="ROLE_ADMIN" th:selected="${klient.ranga == 'ROLE_ADMIN'}">admin</option>
+      </select>
+    </div>
+
+
+    <h3 class="mt-4 mb-3 text-primary">Dane Adresowe</h3>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="kraj">Kraj</label>
+        <input type="text" id="kraj" name="adres.kraj" class="form-control" th:value="${klient.adres.kraj}" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="miasto">Miasto</label>
+        <input type="text" id="miasto" name="adres.miasto" class="form-control" th:value="${klient.adres.miasto}" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <label for="ulica">Ulica</label>
+        <input type="text" id="ulica" name="adres.ulica" class="form-control" th:value="${klient.adres.ulica}" required />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="numerBudynku">Numer Budynku</label>
+        <input type="text" id="numerBudynku" name="adres.numerBudynku" class="form-control" th:value="${klient.adres.numerBudynku}" required />
+      </div>
+    </div>
+
+    <h3 class="mt-4 mb-3 text-primary">Kontakt</h3>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="telefon">Telefon</label>
+        <input type="text" id="telefon" name="kontakt.telefon" class="form-control" th:value="${klient.kontakt.telefon}" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="kontakt.email" class="form-control" th:value="${klient.kontakt.email}" required />
+      </div>
+    </div>
+
+    <div class="form-group text-center mt-4">
+      <button type="submit" class="btn btn-primary btn-lg px-4">Zapisz zmiany</button>
+      <a th:href="@{/admin}" class="btn btn-secondary btn-lg px-4">Powrót</a>
+    </div>
+  </form>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

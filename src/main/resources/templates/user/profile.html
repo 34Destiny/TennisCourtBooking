@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Panel Klienta</title>
+    <script th:src="@{/js/script.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Tenisowy Klub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser == null}">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser == null}">
+                    <a class="nav-link" th:href="@{/register}">Zarejestruj</a>
+                </li>
+                <li class="nav-item active" th:if="${#httpServletRequest.isUserInRole('USER')}">
+                    <a class="nav-link" th:href="@{/profile}">Profil
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('ADMIN')}">
+                    <a class="nav-link" th:href="@{/admin}">Panel</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" href="/reservation">Rezerwacje</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" th:href="@{/logout}"
+                       onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Panel klienta -->
+<div class="container mt-4">
+    <ul class="nav nav-tabs" id="clientTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="dane-tab" data-toggle="tab" href="#dane" role="tab" aria-controls="dane" aria-selected="true">Moje Dane</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="rezerwacje-tab" data-toggle="tab" href="#rezerwacje" role="tab" aria-controls="rezerwacje" aria-selected="false">Moje Rezerwacje</a>
+        </li>
+    </ul>
+    <div class="tab-content mt-4" id="ClientTabContent">
+        <div class="tab-pane fade show active" id="dane" role="tabpanel" aria-labelledby="dane-tab">
+            <h1 class="my-4">Edytuj Swoje Dane</h1>
+            <form th:action="@{/profile/update}" method="post" class="border p-4 shadow-sm rounded bg-light">
+                <input type="hidden" name="idKlient" th:value="${user.idKlient}" />
+                <input type="hidden" name="adres.idAdres" th:value="${user.adres.idAdres}" />
+                <input type="hidden" name="kontakt.idKontakt" th:value="${user.kontakt.idKontakt}" />
+
+                <h3 class="mb-3 text-primary">Dane Klienta</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="imie">Imię</label>
+                        <input type="text" id="imie" name="imie" class="form-control" th:value="${user.imie}" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="nazwisko">Nazwisko</label>
+                        <input type="text" id="nazwisko" name="nazwisko" class="form-control" th:value="${user.nazwisko}" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="haslo">Nowe Hasło</label>
+                    <input type="password" id="haslo" name="haslo" class="form-control" placeholder="Wprowadź nowe hasło" />
+                </div>
+                <h3 class="mt-4 mb-3 text-primary">Dane Adresowe</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="kraj">Kraj</label>
+                        <input type="text" id="kraj" name="adres.kraj" class="form-control" th:value="${user.adres.kraj}" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="miasto">Miasto</label>
+                        <input type="text" id="miasto" name="adres.miasto" class="form-control" th:value="${user.adres.miasto}" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="ulica">Ulica</label>
+                        <input type="text" id="ulica" name="adres.ulica" class="form-control" th:value="${user.adres.ulica}" required />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="numerBudynku">Numer Budynku</label>
+                        <input type="text" id="numerBudynku" name="adres.numerBudynku" class="form-control" th:value="${user.adres.numerBudynku}" required />
+                    </div>
+                </div>
+                <h3 class="mt-4 mb-3 text-primary">Kontakt</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="telefon">Telefon</label>
+                        <input type="text" id="telefon" name="kontakt.telefon" class="form-control" th:value="${user.kontakt.telefon}" required />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="kontakt.email" class="form-control" th:value="${user.kontakt.email}" required/>
+                    </div>
+                </div>
+                <div class="form-group text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">Zapisz zmiany</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="rezerwacje" role="tabpanel" aria-labelledby="rezerwacje-tab">
+            <h1 class="my-4">Moje Rezerwacje</h1>
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>Kort</th>
+                    <th>Data</th>
+                    <th>Godzina rozpoczęcia</th>
+                    <th>Godzina zakończenia</th>
+                    <th>Status</th>
+                    <th>Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rezerwacja : ${rezerwacje}">
+                    <td th:text="${rezerwacja.nazwaKortu}"></td>
+                    <td th:text="${rezerwacja.dataRezerwacji}"></td>
+                    <td th:text="${rezerwacja.godzinaRozpoczeciaRezerwacji}"></td>
+                    <td th:text="${rezerwacja.godzinaZakonczeniaRezerwacji}"></td>
+                    <td th:text="${rezerwacja.statusAktywnosci == 'A' ? 'Nieaktywna' : 'Aktywna'}"></td>
+                    <td>
+                        <a th:href="@{/rezerwacje/usun/{id}(id=${rezerwacja.idRezerwacji})}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Czy na pewno chcesz usunąć rezerwacje?');">Wyloguj</a>Usuń
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Informacje o firmie -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Tenisowy Klub</h5>
+                <p>Najlepszy klub tenisowy w mieście. Oferujemy doskonałe korty oraz profesjonalną obsługę.</p>
+            </div>
+
+            <!-- Kontakt -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Kontakt</h5>
+                <ul class="list-unstyled">
+                    <li>Telefon: +48 123 456 789</li>
+                    <li>Email: kontakt@tenisowyklub.pl</li>
+                    <li>Adres: ul. Sportowa 10, 00-123 Warszawa</li>
+                </ul>
+            </div>
+
+            <!-- Linki pomocnicze -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Przydatne linki</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/rules" class="text-white">Regulamin</a></li>
+                    <li><a href="/privacy" class="text-white">Polityka prywatności</a></li>
+                    <li><a href="/contact" class="text-white">Skontaktuj się z nami</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="bg-light">
+        <div class="text-center">
+            <p class="mb-0">© 2025 Tenisowy Klub. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </div>
+</footer>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

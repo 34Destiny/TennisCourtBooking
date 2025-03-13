@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Rezerwacje - Tenisowy Klub</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Tenisowy Klub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('USER')}">
+          <a class="nav-link" th:href="@{/profile}">Profil</a>
+        </li>
+
+        <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('ADMIN')}">
+          <a class="nav-link" th:href="@{/admin}">Panel</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/reservation">Rezerwacje</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Reservation Section -->
+<section class="bg-light py-5">
+  <div class="container">
+    <h1 class="text-center text-primary mb-4">Rezerwacje Kortów</h1>
+    <div class="row">
+      <!-- Iteracja przez listę kortów -->
+      <div class="col-md-4 mb-4" th:each="kort : ${korty}">
+        <div class="card h-100 shadow border-0 d-flex flex-column">
+          <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title text-primary" th:text="${kort.nazwa}">Nazwa kortu</h5>
+              <p class="card-text text-muted" th:text="${kort.opis}">Opis kortu</p>
+            </div>
+            <a th:href="@{'/reserve/' + ${kort.idKort}}" class="btn btn-primary mt-3">Zarezerwuj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Informacje o firmie -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Tenisowy Klub</h5>
+        <p>Najlepszy klub tenisowy w mieście. Oferujemy doskonałe korty oraz profesjonalną obsługę.</p>
+      </div>
+      <!-- Kontakt -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Kontakt</h5>
+        <ul class="list-unstyled">
+          <li>Telefon: +48 123 456 789</li>
+          <li>Email: kontakt@tenisowyklub.pl</li>
+          <li>Adres: ul. Sportowa 10, 00-123 Warszawa</li>
+        </ul>
+      </div>
+      <!-- Linki pomocnicze -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Przydatne linki</h5>
+        <ul class="list-unstyled">
+          <li><a href="/rules" class="text-white">Regulamin</a></li>
+          <li><a href="/privacy" class="text-white">Polityka prywatności</a></li>
+          <li><a href="/contact" class="text-white">Skontaktuj się z nami</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="bg-light">
+    <div class="text-center">
+      <p class="mb-0">© 2025 Tenisowy Klub. Wszelkie prawa zastrzeżone.</p>
+    </div>
+  </div>
+</footer>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

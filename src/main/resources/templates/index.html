@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Tenisowy Klub</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Tenisowy Klub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser == null}">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser == null}">
+                    <a class="nav-link" th:href="@{/register}">Zarejestruj</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('USER')}">
+                    <a class="nav-link" th:href="@{/profile}">Profil</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('ADMIN')}">
+                    <a class="nav-link" th:href="@{/admin}">Panel</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" href="/reservation">Rezerwacje</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" th:href="@{/logout}"
+                       onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4">Witamy w Tenisowym Klubie</h1>
+        <p class="lead">Zapraszamy do najlepszych kortów tenisowych w mieście!</p>
+        <a th:href="@{/reservation}" class="btn btn-light btn-lg mt-4">Zarezerwuj kort</a>
+    </div>
+</header>
+
+<!-- Content Section -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-primary">Nasze Korty</h2>
+            <p>Posiadamy korty o najwyższym standardzie, które idealnie nadają się zarówno dla amatorów, jak i profesjonalistów.</p>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-primary">Dołącz do Klubu</h2>
+            <p>Zostań członkiem naszego klubu i ciesz się dodatkowymi korzyściami, takimi jak treningi z profesjonalnymi trenerami oraz specjalne zniżki.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Informacje o firmie -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Tenisowy Klub</h5>
+                <p>Najlepszy klub tenisowy w mieście. Oferujemy doskonałe korty oraz profesjonalną obsługę.</p>
+            </div>
+            <!-- Kontakt -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Kontakt</h5>
+                <ul class="list-unstyled">
+                    <li>Telefon: +48 123 456 789</li>
+                    <li>Email: kontakt@tenisowyklub.pl</li>
+                    <li>Adres: ul. Sportowa 10, 00-123 Warszawa</li>
+                </ul>
+            </div>
+            <!-- Linki pomocnicze -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Przydatne linki</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/rules" class="text-white">Regulamin</a></li>
+                    <li><a href="/privacy" class="text-white">Polityka prywatności</a></li>
+                    <li><a href="/contact" class="text-white">Skontaktuj się z nami</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="bg-light">
+        <div class="text-center">
+            <p class="mb-0">© 2025 Tenisowy Klub. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </div>
+</footer>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

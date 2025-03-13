@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Panel Administratora</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+
+<!-- Górny navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Tenisowy Klub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}">Panel</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" href="/reservation">Rezerwacje</a>
+                </li>
+                <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+                    <a class="nav-link" th:href="@{/logout}"
+                       onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Drugi navbar jako zakładki -->
+<div class="container mt-4">
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="klienci-tab" data-toggle="tab" href="#klienci" role="tab" aria-controls="klienci" aria-selected="true">Klienci</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="korty-tab" data-toggle="tab" href="#korty" role="tab" aria-controls="korty" aria-selected="false">Korty</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="rezerwacje-tab" data-toggle="tab" href="#rezerwacje" role="tab" aria-controls="korty" aria-selected="false">Rezerwacje</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4" id="adminTabContent">
+        <div class="tab-pane fade show active" id="klienci" role="tabpanel" aria-labelledby="klienci-tab">
+            <h1 class="my-4">Lista Klientów</h1>
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="klient : ${klienci}">
+                    <td th:text="${klient.idKlient}"></td>
+                    <td th:text="${klient.imie}"></td>
+                    <td th:text="${klient.nazwisko}"></td>
+                    <td>
+                        <a th:href="@{/admin/details/{id}(id=${klient.idKlient})}" class="btn btn-info btn-sm">Edytuj</a>
+                        <a th:href="@{/admin/delete/{id}(id=${klient.idKlient})}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Czy na pewno chcesz usunąć tego klienta?');">Usuń</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="korty" role="tabpanel" aria-labelledby="korty-tab">
+            <h1 class="my-4">Lista Kortów</h1>
+            <a href="#" class="btn btn-success mb-3" data-toggle="modal" data-target="#addKortModal">Dodaj Nowy Kort</a>
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="kort : ${korty}">
+                    <td th:text="${kort.idKort}"></td>
+                    <td th:text="${kort.nazwa}"></td>
+                    <td th:text="${kort.opis}"></td>
+                    <td>
+                        <a th:href="@{/admin/courts/edit/{id}(id=${kort.idKort})}" class="btn btn-info btn-sm">Edytuj</a>
+                        <a th:href="@{/admin/courts/delete/{id}(id=${kort.idKort})}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Czy na pewno chcesz usunąć ten kort?');">Usuń</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Modal do dodawania nowego kortu -->
+        <div class="modal fade" id="addKortModal" tabindex="-1" role="dialog" aria-labelledby="addKortModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form th:action="@{/admin/courts/save}" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addKortModalLabel">Dodaj Nowy Kort</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Pole na nazwę kortu -->
+                            <div class="form-group">
+                                <label for="nazwaKortu">Nazwa Kortu</label>
+                                <input type="text" id="nazwaKortu" name="nazwa" class="form-control" placeholder="Wpisz nazwę kortu" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="nazwaKortu">Opis Kortu</label>
+                                <textarea id="opis" name="opis" class="form-control" placeholder="Wpisz opis kortu" required></textarea>
+                            </div>
+                            <!-- Sekcja z adresem -->
+                            <h5 class="mt-4">Dane Adresowe</h5>
+                            <div class="form-group">
+                                <label for="kraj">Kraj</label>
+                                <input type="text" id="kraj" name="adres.kraj" class="form-control" placeholder="Podaj kraj" />
+                            </div>
+                            <div class="form-group">
+                                <label for="miasto">Miasto</label>
+                                <input type="text" id="miasto" name="adres.miasto" class="form-control" placeholder="Podaj miasto" />
+                            </div>
+                            <div class="form-group">
+                                <label for="ulica">Ulica</label>
+                                <input type="text" id="ulica" name="adres.ulica" class="form-control" placeholder="Podaj ulicę" />
+                            </div>
+                            <div class="form-group">
+                                <label for="numerBudynku">Numer Budynku</label>
+                                <input type="text" id="numerBudynku" name="adres.numerBudynku" class="form-control" placeholder="Podaj numer budynku" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                            <button type="submit" class="btn btn-primary">Dodaj Kort</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="rezerwacje" role="tabpanel" aria-labelledby="rezerwacje-tab">
+            <h1 class="my-4">Lista Rezerwacji</h1>
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imie</th>
+                    <th>Nazwisko</th>
+                    <th>Kort</th>
+                    <th>Data</th>
+                    <th>Godzina rozpoczęcia</th>
+                    <th>Godzina zakończenia</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rezerwacja : ${rezerwacje}">
+                    <td th:text="${rezerwacja.idRezerwacji}"></td>
+                    <td th:text="${rezerwacja.imieKlienta}"></td>
+                    <td th:text="${rezerwacja.nazwiskoKlienta}"></td>
+                    <td th:text="${rezerwacja.nazwaKortu}"></td>
+                    <td th:text="${rezerwacja.dataRezerwacji}"></td>
+                    <td th:text="${rezerwacja.godzinaRozpoczeciaRezerwacji}"></td>
+                    <td th:text="${rezerwacja.godzinaZakonczeniaRezerwacji}"></td>
+                    <td th:text="${rezerwacja.statusAktywnosci == 'A' ? 'Nieaktywna' : 'Aktywna'}"></td>
+                    <td>
+                        <a th:href="@{'/admin/rezerwacje/usun/' + ${rezerwacja.idRezerwacji}}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Czy na pewno chcesz usunąć tę rezerwację?');">Usuń</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Informacje o firmie -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Tenisowy Klub</h5>
+                <p>Najlepszy klub tenisowy w mieście. Oferujemy doskonałe korty oraz profesjonalną obsługę.</p>
+            </div>
+            <!-- Kontakt -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Kontakt</h5>
+                <ul class="list-unstyled">
+                    <li>Telefon: +48 123 456 789</li>
+                    <li>Email: kontakt@tenisowyklub.pl</li>
+                    <li>Adres: ul. Sportowa 10, 00-123 Warszawa</li>
+                </ul>
+            </div>
+            <!-- Linki pomocnicze -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Przydatne linki</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/rules" class="text-white">Regulamin</a></li>
+                    <li><a href="/privacy" class="text-white">Polityka prywatności</a></li>
+                    <li><a href="/contact" class="text-white">Skontaktuj się z nami</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="bg-light">
+        <div class="text-center">
+            <p class="mb-0">© 2025 Tenisowy Klub. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </div>
+</footer>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edycja Kortu</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Tenisowy Klub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/admin}">Panel</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+          <a class="nav-link" href="/reservation">Rezerwacje</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+          <a class="nav-link" th:href="@{/logout}"
+             onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Edycja Kortu</h1>
+
+  <form th:action="@{/admin/courts/update}" method="post" class="border p-4 shadow-sm rounded bg-light">
+    <input type="hidden" name="idKort" th:value="${kort.idKort}" />
+    <input type="hidden" name="adres.idAdres" th:value="${kort.adres.idAdres}" />
+
+    <h3 class="mb-3 text-primary">Dane Kortu</h3>
+    <div class="form-group">
+      <label for="nazwa">Nazwa Kortu</label>
+      <input type="text" id="nazwa" name="nazwa" class="form-control" th:value="${kort.nazwa}" required />
+    </div>
+    <div class="form-group">
+      <label for="opis">Opis Kortu</label>
+      <textarea id="opis" name="opis" class="form-control" th:text="${kort.opis}"></textarea>
+    </div>
+
+    <h3 class="mt-4 mb-3 text-primary">Dane Adresowe</h3>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="kraj">Kraj</label>
+        <input type="text" id="kraj" name="adres.kraj" class="form-control" th:value="${kort.adres.kraj}" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="miasto">Miasto</label>
+        <input type="text" id="miasto" name="adres.miasto" class="form-control" th:value="${kort.adres.miasto}" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <label for="ulica">Ulica</label>
+        <input type="text" id="ulica" name="adres.ulica" class="form-control" th:value="${kort.adres.ulica}" required />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="numerBudynku">Numer Budynku</label>
+        <input type="text" id="numerBudynku" name="adres.numerBudynku" class="form-control" th:value="${kort.adres.numerBudynku}" required />
+      </div>
+    </div>
+
+    <div class="form-group text-center mt-4">
+      <button type="submit" class="btn btn-primary btn-lg px-4">Zapisz zmiany</button>
+      <a th:href="@{/admin}" class="btn btn-secondary btn-lg px-4">Powrót</a>
+    </div>
+  </form>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

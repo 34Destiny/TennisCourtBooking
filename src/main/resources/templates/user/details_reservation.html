@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Rezerwacja Kortu</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+  <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Tenisowy Klub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('USER')}">
+          <a class="nav-link" th:href="@{/profile}">Profil</a>
+        </li>
+
+        <li class="nav-item" th:if="${#httpServletRequest.isUserInRole('ADMIN')}">
+          <a class="nav-link" th:href="@{/admin}">Panel</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/reservation">Rezerwacje</a>
+        </li>
+        <li class="nav-item" th:if="${#httpServletRequest.remoteUser != null}">
+          <a class="nav-link" th:href="@{/logout}"
+             onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Details Section -->
+<section class="bg-light py-5">
+  <div class="container">
+    <h1 class="text-center text-primary mb-4">Rezerwacja Kortu</h1>
+    <div class="row">
+      <!-- Szczegóły kortu -->
+      <div class="col-md-6">
+        <h2 th:text="${kort.nazwa}">Nazwa kortu</h2>
+        <p th:text="${kort.opis}">Opis kortu</p>
+        <address>
+          <span th:text="'Ulica: ' + ${kort.adres.ulica}"></span><br>
+          <span th:text="'Numer budynku: ' + ${kort.adres.numerBudynku}"></span><br>
+          <span th:text="'Miasto: ' + ${kort.adres.miasto}"></span><br>
+        </address>
+      </div>
+
+      <!-- Kalendarz rezerwacji -->
+      <div class="col-md-6">
+        <h3>Wybierz datę i godzinę</h3>
+        <form th:action="@{/reserve}" method="post">
+          <input type="hidden" name="idKort" th:value="${kort.idKort}" />
+          <input type="hidden" name="idKlient" th:value="${klientId}" />
+
+          <!-- Wybór daty -->
+          <div class="form-group">
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="dataRezerwacji" class="form-control"
+                   min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                   max="${#dates.format(#dates.createNow().plusYears(1), 'yyyy-MM-dd')}" required>
+          </div>
+
+          <!-- Godzina rozpoczęcia -->
+          <div class="form-group">
+            <label for="startTime">Godzina rozpoczęcia:</label>
+            <select id="startTime" name="godzinaRozpoczeciaRezerwacji" class="form-control" required>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+            </select>
+          </div>
+
+          <!-- Godzina zakończenia -->
+          <div class="form-group">
+            <label for="endTime">Godzina zakończenia:</label>
+            <select id="endTime" name="godzinaZakonczeniaRezerwacji" class="form-control" required>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="statusAktywnosci" value="A"/>
+          <button type="submit" class="btn btn-primary">Zarezerwuj</button>
+          <a th:href="@{/reservation}" class="btn btn-secondary">Powrót</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Informacje o firmie -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Tenisowy Klub</h5>
+        <p>Najlepszy klub tenisowy w mieście. Oferujemy doskonałe korty oraz profesjonalną obsługę.</p>
+      </div>
+      <!-- Kontakt -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Kontakt</h5>
+        <ul class="list-unstyled">
+          <li>Telefon: +48 123 456 789</li>
+          <li>Email: kontakt@tenisowyklub.pl</li>
+          <li>Adres: ul. Sportowa 10, 00-123 Warszawa</li>
+        </ul>
+      </div>
+      <!-- Linki pomocnicze -->
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Przydatne linki</h5>
+        <ul class="list-unstyled">
+          <li><a href="/rules" class="text-white">Regulamin</a></li>
+          <li><a href="/privacy" class="text-white">Polityka prywatności</a></li>
+          <li><a href="/contact" class="text-white">Skontaktuj się z nami</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="bg-light">
+    <div class="text-center">
+      <p class="mb-0">© 2025 Tenisowy Klub. Wszelkie prawa zastrzeżone.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
