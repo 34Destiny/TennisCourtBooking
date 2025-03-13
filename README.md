@@ -49,6 +49,11 @@ Aby uruchomić aplikację lokalnie, wykonaj poniższe kroki:
    ```
 
 ## 📸 **Zrzuty ekranu**  
-| Strona główna | Panel użytkownika | Panel administratora | Rezerwacje |
-|--------------|----------------|----------------|
-| ![Home](./images/main.png) | ![User Panel](./images/user.png) | ![Admin Panel](./images/admin.png) | ![Reserwation](./images/reservations.png) |
+Strona główna
+![Home](./images/main.png)
+Panel użytkownika
+![User Panel](./images/user.png) 
+Panel administratora
+![Admin Panel](./images/admin.png) 
+Rezerwacje
+![Reserwation](./images/reservations.png)
